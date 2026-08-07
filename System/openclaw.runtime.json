@@ -1,0 +1,180 @@
+{
+  "$comment": "Runtime config template deployed by setup.ps1 to %USERPROFILE%\\.openclaw\\openclaw.json. Double-underscore placeholders are substituted at install time. Secrets are intentionally blank - put them in .env and re-run setup.ps1.",
+  "skills": {
+    "allowBundled": [
+      "image-generation"
+    ],
+    "load": {
+      "extraDirs": [
+        "__SKILLS_DIR__"
+      ]
+    },
+    "entries": {
+      "image-generation": {
+        "enabled": true
+      },
+      "inventory-management": {
+        "enabled": true
+      },
+      "cost-estimation": {
+        "enabled": true
+      },
+      "unoq": {
+        "enabled": true
+      }
+    }
+  },
+  "agents": {
+    "defaults": {
+      "workspace": "__WORKSPACE__",
+      "experimental": {
+        "localModelLean": true
+      },
+      "model": {
+        "primary": "anthropic/claude-sonnet-5",
+        "fallbacks": []
+      },
+      "models": {
+        "anthropic/claude-sonnet-5": {},
+        "anthropic/claude-opus-4-8": {},
+        "cirrascale-ind/Llama-3.3-70B": {},
+        "custom-aisuite-cirrascale-com/Llama-3.1-8B": {
+          "alias": "ai100_model"
+        },
+        "custom-localhost-8100/Llama-3.3-70B": {
+          "alias": "proxy_model"
+        }
+      }
+    }
+  },
+  "gateway": {
+    "mode": "local",
+    "auth": {
+      "mode": "token",
+      "token": "__GATEWAY_TOKEN__"
+    },
+    "port": 18789,
+    "bind": "lan",
+    "tailscale": {
+      "mode": "off",
+      "resetOnExit": false
+    },
+    "controlUi": {
+      "allowInsecureAuth": true,
+      "allowedOrigins": [
+        "http://localhost:18789",
+        "http://127.0.0.1:18789"
+      ]
+    },
+    "nodes": {
+      "denyCommands": [
+        "camera.snap",
+        "camera.clip",
+        "screen.record",
+        "contacts.add",
+        "calendar.add",
+        "reminders.add",
+        "sms.send",
+        "sms.search"
+      ],
+      "allowCommands": [
+        "whisper.transcribe"
+      ]
+    }
+  },
+  "models": {
+    "mode": "merge",
+    "providers": {}
+  },
+  "session": {
+    "dmScope": "per-channel-peer"
+  },
+  "messages": {
+    "visibleReplies": "message_tool"
+  },
+  "plugins": {
+    "entries": {
+      "anthropic": {
+        "enabled": true
+      },
+      "telegram": {
+        "enabled": false
+      },
+      "whisper-node-bridge": {
+        "enabled": false,
+        "config": {
+          "nodeId": "",
+          "timeoutMs": 120000
+        }
+      }
+    },
+    "load": {
+      "paths": []
+    }
+  },
+  "channels": {
+    "telegram": {
+      "enabled": false,
+      "botToken": "",
+      "dmPolicy": "open",
+      "allowFrom": [
+        "*"
+      ],
+      "groupAllowFrom": [
+        "*"
+      ],
+      "groups": {
+        "*": {
+          "requireMention": true
+        }
+      }
+    }
+  },
+  "hooks": {
+    "internal": {
+      "entries": {
+        "session-memory": {
+          "enabled": true
+        }
+      }
+    }
+  },
+  "commands": {
+    "ownerAllowFrom": []
+  },
+  "tools": {
+    "allow": [
+      "group:fs",
+      "exec",
+      "image_generate"
+    ],
+    "media": {
+      "concurrency": 2,
+      "models": [
+        {
+          "capabilities": [
+            "audio"
+          ],
+          "provider": "whisper-node-bridge"
+        }
+      ],
+      "audio": {
+        "timeoutSeconds": 120,
+        "enabled": true
+      }
+    },
+    "exec": {
+      "security": "full",
+      "ask": "off"
+    },
+    "profile": "coding"
+  },
+  "auth": {
+    "profiles": {
+      "anthropic:default": {
+        "provider": "anthropic",
+        "mode": "api_key"
+      }
+    }
+  }
+}
