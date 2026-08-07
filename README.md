@@ -76,6 +76,31 @@ later works without re-running setup.
 Skipping it is fine. Everything else still works, and cloud image generation covers the
 gap until you add it.
 
+**Geniex and the vision model.** `setup.ps1` installs the Geniex CLI for you
+(`npm install -g geniex`), but it does not pull the vision-language model — that comes
+from Qualcomm AI Hub and has to be fetched once, separately:
+
+1. Go to [Qualcomm AI Hub](https://aihub.qualcomm.com/compute/models) and search for
+   **Qwen2.5-VL-7B-Instruct** (or open its page directly:
+   <https://aihub.qualcomm.com/models/qwen2_5_vl_7b_instruct>). Filter by chipset
+   **Snapdragon X Elite** and runtime **GenieX - QAIRT** if it isn't preselected.
+2. Open the model's **Quick Start** tab. For Windows on Snapdragon X Elite it gives you
+   a Geniex CLI installer (`geniex-cli.exe`, Windows ARM) and a one-line command to run
+   the model:
+   ```
+   geniex infer ai-hub-models/Qwen2.5-VL-7B-Instruct
+   ```
+3. Run that command once geniex is installed. Geniex resolves and downloads the model
+   itself — there's no separate model-file folder to place by hand, unlike the SD2.1
+   package above. `GENIEX_MODEL` in `.env` should match the model id you ran
+   (`ai-hub-models/Qwen2.5-VL-7B-Instruct` is the default).
+4. `start.ps1` starts the Geniex service on port 18181 for you afterwards; you don't
+   need to keep the `geniex infer` command running yourself.
+
+Skipping this is also fine — decoration-photo analysis just falls back to whatever
+cloud endpoint is configured via `IMAGE_READ_MODEL_URL`, or mock data if that's blank
+too.
+
 **API keys.** `ANTHROPIC_API_KEY` for the agent itself and `CIRRASCALE_API_KEY` for
 cloud images. Telegram notifications need a bot token and chat id. Anything left blank
 degrades to mock data rather than failing — this applies to invoice reading, photo
@@ -408,6 +433,12 @@ up. Look at `logs\sd21-session-server.log`.
 
 **`openclaw is not on PATH`.** The global npm install did not take. Run
 `npm install -g openclaw` and start again.
+
+**Photo analysis always falls back to cloud/mock, never uses the NPU.** Geniex is
+installed but the model was never fetched. Run
+`geniex infer ai-hub-models/Qwen2.5-VL-7B-Instruct` once (see
+[Requirements](#requirements) for the AI Hub steps) so Geniex has the model cached,
+then restart with `.\start.bat`.
 
 **Port 18789 is already in use.** Another gateway is running. Stop it before starting a
 new one; `start.ps1` refuses rather than fighting over the port.
