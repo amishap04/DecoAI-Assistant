@@ -1,0 +1,16 @@
+# Filled-in secrets - never commit. Share .env.example instead.
+.env
+
+# Machine-specific layout written by setup.ps1
+decoai-setup.json
+
+# Local artefacts
+*.log
+.claude/
+Skills/image-generation/Stable-Diffusion-2-1/Model_Bins/
+Skills/image-generation/Stable-Diffusion-2-1/venv/
+Skills/**/node_modules/
+Skills/database/*.sqlite
+__pycache__/
+*.pyc
+.DS_Store
