@@ -330,6 +330,8 @@ missing-items list and returns Amazon search URLs, optionally tagged with
 
 ## Using the Uno Q camera
 
+![Uno Q wired to the ESP32-CAM: 5V/GND plus two data lines](unoq-esp32-wiring.jpg.png)
+
 The camera path needs the board connected over USB with its VLM running:
 
 ```powershell
