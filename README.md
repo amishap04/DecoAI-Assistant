@@ -85,8 +85,9 @@ from Qualcomm AI Hub and has to be fetched once, separately:
    <https://aihub.qualcomm.com/models/qwen2_5_vl_7b_instruct>). Filter by chipset
    **Snapdragon X Elite** and runtime **GenieX - QAIRT** if it isn't preselected.
 2. Open the model's **Quick Start** tab. For Windows on Snapdragon X Elite it gives you
-   a Geniex CLI installer (`geniex-cli.exe`, Windows ARM) and a one-line command to run
-   the model:
+   a Geniex CLI installer for Windows ARM
+   (<https://qaihub-public-assets.s3.us-west-2.amazonaws.com/qai-hub-geniex/geniex-cli.exe>)
+   and a one-line command to run the model:
    ```
    geniex infer ai-hub-models/Qwen2.5-VL-7B-Instruct
    ```
@@ -96,6 +97,19 @@ from Qualcomm AI Hub and has to be fetched once, separately:
    (`ai-hub-models/Qwen2.5-VL-7B-Instruct` is the default).
 4. `start.ps1` starts the Geniex service on port 18181 for you afterwards; you don't
    need to keep the `geniex infer` command running yourself.
+
+   If you downloaded the model bundle by hand instead (an AI Hub `.zip`) rather than
+   letting `geniex infer` fetch it, register it with `geniex pull` instead — it accepts
+   the zip directly, no manual unzip needed:
+
+   ```powershell
+   geniex pull local/qwen2.5-vl --local-path C:\downloads\qwen2_5_vl_7b_instruct.zip
+   geniex infer local/qwen2.5-vl
+   ```
+
+   Unzipping it yourself first works too — point `--local-path` at the extracted folder
+   instead of the `.zip`. Either way, once `geniex pull` finishes caching it you can
+   delete the original download; `geniex list` confirms it's cached.
 
 Skipping this is also fine — decoration-photo analysis just falls back to whatever
 cloud endpoint is configured via `IMAGE_READ_MODEL_URL`, or mock data if that's blank
