@@ -473,25 +473,6 @@ first place to look when something starts but misbehaves.
 
 ---
 
-## Known Gaps
-
-**Voice interaction is scaffolded but disabled.** A `whisper-node-bridge` plugin is
-registered in the OpenClaw config alongside Telegram, but it's turned off, and the
-agent's own instructions make no mention of voice, speech, or audio input. Enabling it
-is plumbing, not a rebuild — but it isn't live today.
-
-## Future Work
-
-- Turn on and wire up the existing `whisper-node-bridge` plugin for voice interaction
-- Real-time warehouse inventory detection and automatic updates from continuous camera
-  feeds, rather than on-demand refresh
-- Improved material quantity estimation
-- Personalized decoration recommendations and budget-constrained design generation
-- Automatic comparison of generated designs by price
-- Direct retailer APIs beyond Amazon search links, and autonomous purchasing workflows
-- Multi-user decorator dashboards
-- Additional edge AI devices and expanded on-device inference
-- End-to-end event planning beyond decorations
 
 ---
 
