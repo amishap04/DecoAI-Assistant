@@ -618,7 +618,7 @@ if ($modelReady) {
         Write-Host "  The precompiled SD2.1 QNN package is not distributed with this repo." -ForegroundColor White
         Write-Host "  It is the folder containing:" -ForegroundColor White
         Write-Host "    text_encoder.onnx  unet.onnx  vae.onnx  metadata.json"
-        Write-Host "    and the matching *_qairt_context.bin files (QAIRT 2.45.0, HTP v73)"
+        Write-Host ""
         Write-Host ""
         Write-Host "  Setup looks for it automatically in:" -ForegroundColor DarkGray
         Write-Host "    $(Join-Path $Workspace 'models')" -ForegroundColor DarkGray
