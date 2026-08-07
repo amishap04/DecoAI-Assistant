@@ -1,0 +1,26 @@
+{
+  "generated_at": 1786078684,
+  "concepts": [
+    {
+      "concept": 1,
+      "backend": "sd2.1-npu",
+      "prompt": "blue and gold balloon arch with white backdrop",
+      "path": "Skills/image-generation/output/concept_1786078633_sd21.png",
+      "abs_path": "C:\\Users\\qc_de\\.openclaw\\workspace\\Skills\\image-generation\\output\\concept_1786078633_sd21.png"
+    },
+    {
+      "concept": 2,
+      "backend": "cirrascale",
+      "prompt": "Elegant indoor birthday party backdrop, white pleated fabric backdrop wall, cascading balloon garland arch in royal blue and metallic gold balloons of varying sizes, gold sequin accent balloons, soft warm string lights woven through, gold number or letter balloons off to the side, marble floor reflecting light, soft golden hour glow, professional event photography, high detail, elegant and celebratory mood",
+      "path": "Skills/image-generation/output/concept_1786078667_1.png",
+      "abs_path": "C:\\Users\\qc_de\\.openclaw\\workspace\\Skills\\image-generation\\output\\concept_1786078667_1.png"
+    },
+    {
+      "concept": 3,
+      "backend": "cirrascale",
+      "prompt": "Modern minimalist party setup, crisp white curtain backdrop with soft uplighting, organic balloon garland cluster in shades of blue and gold cascading asymmetrically from top corner, matte and chrome balloon textures mixed, gold geometric decor accents on a nearby table, clean studio lighting, airy sophisticated atmosphere, wide angle shot, high resolution",
+      "path": "Skills/image-generation/output/concept_1786078684_2.png",
+      "abs_path": "C:\\Users\\qc_de\\.openclaw\\workspace\\Skills\\image-generation\\output\\concept_1786078684_2.png"
+    }
+  ]
+}

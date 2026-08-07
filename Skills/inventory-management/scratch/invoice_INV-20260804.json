@@ -1,0 +1,33 @@
+{
+  "lines": [
+    {
+      "item_name": "Paper Flower Hangings",
+      "color": "Blue",
+      "quantity": 4,
+      "cost_ea": 12.99,
+      "rent_ea": 4.0
+    },
+    {
+      "item_name": "Golden Star Balloons",
+      "color": null,
+      "quantity": 4,
+      "cost_ea": 5.49,
+      "rent_ea": 0
+    },
+    {
+      "item_name": "Light Bulbs",
+      "color": null,
+      "quantity": 10,
+      "cost_ea": 3.99,
+      "rent_ea": 0
+    },
+    {
+      "item_name": "Golden Brown Table Covers",
+      "color": null,
+      "quantity": 2,
+      "cost_ea": 18.75,
+      "rent_ea": 6.0
+    }
+  ],
+  "invoice_date": "2026-08-04"
+}

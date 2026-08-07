@@ -1,0 +1,26 @@
+{
+  "lines": [
+    {
+      "item_name": "Stone Finish Pillar Candle",
+      "color": null,
+      "quantity": 3,
+      "cost_ea": 14.99,
+      "rent_ea": 5.0
+    },
+    {
+      "item_name": "Helium Quality Latex Balloons - Blue Mix",
+      "color": "Blue Mix",
+      "quantity": 4,
+      "cost_ea": 4.99,
+      "rent_ea": 0
+    },
+    {
+      "item_name": "Organza Sheer Ribbon - Copper/Burnt Orange",
+      "color": "Copper/Burnt Orange",
+      "quantity": 4,
+      "cost_ea": 3.49,
+      "rent_ea": 0
+    }
+  ],
+  "invoice_date": "2026-08-06"
+}

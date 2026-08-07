@@ -1,0 +1,31 @@
+# Stable Diffusion 2.1 QNN pipeline -- direct dependencies only.
+#
+# Targets win_arm64 / CPython 3.12 (Snapdragon X Elite). Only packages actually
+# imported by generate.py / qnn_runner.py / quantization.py / scheduler.py /
+# session_server.py / tokenizer.py are listed; everything else installs
+# transitively. (The previous requirements.txt was a full `pip freeze` of a
+# shared venv used by other projects too -- torchvision, transformers,
+# accelerate, sentencepiece, safetensors and onnx are not imported anywhere in
+# this pipeline and have been dropped.)
+#
+# torch has no win_arm64 wheel on PyPI -- install from PyTorch's own CPU wheel
+# index instead. This is fine here: torch is only used for CPU-side tensor math
+# (torch.randn for the initial latent, and as diffusers' scheduler backend) --
+# actual model inference runs on the NPU via onnxruntime-qnn, not torch.
+--extra-index-url https://download.pytorch.org/whl/cpu
+
+torch==2.7.0
+
+# onnxruntime-qnn 2.x is a *plugin* execution provider: unlike the 1.x wheel it
+# does not ship its own `onnxruntime` build, so the core runtime is a separate
+# (and now direct) dependency. 2.4.0 was compiled against core 1.26.0 and needs
+# >= 1.24.1, so core is pinned to 1.26.0 here. 2.4.0 bundles QAIRT 2.48.40,
+# which is what lets it load this model package's QAIRT 2.45.0 context binaries
+# (the QAIRT 2.42 DLLs in onnxruntime-qnn 1.24.1 could not -- see README).
+onnxruntime==1.26.0
+onnxruntime-qnn==2.4.0
+diffusers==0.38.0
+tokenizers==0.23.1
+huggingface_hub==1.15.0
+numpy==2.5.1
+pillow==12.3.0

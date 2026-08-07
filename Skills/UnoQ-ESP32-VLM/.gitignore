@@ -1,0 +1,5 @@
+.DS_Store
+capture_*.jpg
+models/
+*.gguf
+__pycache__/
