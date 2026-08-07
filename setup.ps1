@@ -592,12 +592,38 @@ $modelReady = Test-Path -LiteralPath (Join-Path $DirModelBins "metadata.json")
 if ($modelReady) {
     Write-OK "Model package already present in $DirModelBins"
 } else {
+    # Look for a package the user already dropped somewhere obvious before
+    # asking them to type a path. A folder counts only if it has metadata.json.
+    if (-not $ModelBins) {
+        $candidates = @(
+            (Join-Path $Workspace "models\stable-diffusion-2-1\Model_Bins"),
+            (Join-Path $Workspace "models\Model_Bins"),
+            (Join-Path $Workspace "models"),
+            (Join-Path $ScriptDir "models\stable-diffusion-2-1\Model_Bins"),
+            (Join-Path $ScriptDir "models\Model_Bins"),
+            (Join-Path $ScriptDir "models"),
+            (Join-Path $ScriptDir "Model_Bins")
+        )
+        foreach ($c in $candidates) {
+            if (Test-Path -LiteralPath (Join-Path $c "metadata.json")) {
+                $ModelBins = $c
+                Write-OK "Found an SD2.1 package at $c"
+                break
+            }
+        }
+    }
+
     if (-not $ModelBins -and -not $NonInteractive) {
         Write-Host ""
         Write-Host "  The precompiled SD2.1 QNN package is not distributed with this repo." -ForegroundColor White
         Write-Host "  It is the folder containing:" -ForegroundColor White
         Write-Host "    text_encoder.onnx  unet.onnx  vae.onnx  metadata.json"
         Write-Host "    and the matching *_qairt_context.bin files (QAIRT 2.45.0, HTP v73)"
+        Write-Host ""
+        Write-Host "  Setup looks for it automatically in:" -ForegroundColor DarkGray
+        Write-Host "    $(Join-Path $Workspace 'models')" -ForegroundColor DarkGray
+        Write-Host "    $(Join-Path $ScriptDir 'models')" -ForegroundColor DarkGray
+        Write-Host "  Drop it in either and re-run, or give the path here." -ForegroundColor DarkGray
         Write-Host ""
         Write-Host "  Leave blank to skip - the cloud image path still works, and you can" -ForegroundColor DarkGray
         Write-Host "  drop the files into $DirModelBins later." -ForegroundColor DarkGray

@@ -45,11 +45,24 @@ so you normally only need winget present:
 - `openclaw` and `geniex`, installed globally via npm
 
 **Not included in this repo.** The precompiled Stable Diffusion 2.1 QNN package
-is several GB and is distributed separately. It is the folder containing
-`text_encoder.onnx`, `unet.onnx`, `vae.onnx`, `metadata.json` and the matching
-`*_qairt_context.bin` files (QAIRT 2.45.0, HTP v73). Setup asks where it is and
-copies it into your data directory. Skipping it is fine — everything else works,
-and cloud image generation covers the gap until you add it.
+is several GB and is distributed separately. It is a single flat folder holding
+seven files:
+
+```
+metadata.json
+text_encoder.onnx      text_encoder_qairt_context.bin
+unet.onnx              unet_qairt_context.bin
+vae.onnx               vae_qairt_context.bin
+```
+
+The `.onnx` files are thin wrappers and the `.bin` files hold the compiled NPU
+graphs, so both halves must stay together. Drop that folder into a `models`
+directory — either beside `setup.ps1` or in the OpenClaw workspace — and setup
+finds it on its own; otherwise it asks for the path. `start.ps1` checks the same
+places, so adding the model later works without re-running setup.
+
+Skipping it is fine. Everything else still works, and cloud image generation
+covers the gap until you add it.
 
 **API keys.** `ANTHROPIC_API_KEY` for the agent itself and `CIRRASCALE_API_KEY`
 for cloud images. Telegram notifications need a bot token and chat id. Anything

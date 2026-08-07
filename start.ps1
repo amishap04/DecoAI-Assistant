@@ -177,7 +177,11 @@ function Start-Service-Process {
         [string]$WorkDir = ""
     )
     [System.IO.File]::WriteAllText($LogFile, "", (New-Object System.Text.UTF8Encoding($false)))
-    $cmdArgs = "/c $CommandLine >> `"$LogFile`" 2>&1"
+    # /s plus one pair of outer quotes: cmd strips exactly the first and last
+    # quote and runs the rest verbatim. Without it, a command line that opens
+    # with a quoted interpreter path gets mangled into "The system cannot find
+    # the path specified" before the program is ever launched.
+    $cmdArgs = "/s /c `"$CommandLine >> `"$LogFile`" 2>&1`""
     $splat = @{
         FilePath     = "cmd.exe"
         ArgumentList = $cmdArgs
@@ -190,13 +194,24 @@ function Start-Service-Process {
     return $p
 }
 
+# Start-Process -PassThru hands back a process object whose ExitCode is often
+# blank until it is refreshed, which turns a real failure into "(code )".
+function Get-ExitCode {
+    param($Proc)
+    try {
+        $Proc.Refresh()
+        if ($null -ne $Proc.ExitCode) { return $Proc.ExitCode }
+    } catch { }
+    return "unknown"
+}
+
 function Wait-ForPort {
     param([string]$Name, [int]$Port, [int]$TimeoutSeconds, $Proc)
     Write-Info "waiting for $Name on port $Port (up to ${TimeoutSeconds}s)"
     $deadline = (Get-Date).AddSeconds($TimeoutSeconds)
     while ((Get-Date) -lt $deadline) {
         if ($Proc -and $Proc.HasExited) {
-            Write-Fail "$Name exited early (code $($Proc.ExitCode))"
+            Write-Fail "$Name exited early (code $(Get-ExitCode $Proc)) - see $($script:Started | Where-Object { $_.Proc.Id -eq $Proc.Id } | ForEach-Object { $_.Log })"
             return $false
         }
         if (Test-Port -Port $Port) { return $true }
@@ -237,6 +252,24 @@ function Stop-All {
 # ---------------------------------------------------------------------------
 
 $sessionScript = Join-Path $SkillsDir "image-generation\Stable-Diffusion-2-1\session_server.py"
+
+# setup.ps1 records where it put the package, but the model is often dropped in
+# afterwards. Fall back to the usual spots so that works without a re-run.
+if (-not (Test-Path -LiteralPath (Join-Path $ModelDir "metadata.json"))) {
+    foreach ($c in @(
+        (Join-Path $Workspace "models\stable-diffusion-2-1\Model_Bins"),
+        (Join-Path $Workspace "models\Model_Bins"),
+        (Join-Path $Workspace "models"),
+        (Join-Path $SkillsDir "image-generation\Stable-Diffusion-2-1\Model_Bins")
+    )) {
+        if (Test-Path -LiteralPath (Join-Path $c "metadata.json")) {
+            $ModelDir = $c
+            [System.Environment]::SetEnvironmentVariable("SD21_MODEL_DIR", $ModelDir, "Process")
+            Write-Info "using the SD2.1 package found at $ModelDir"
+            break
+        }
+    }
+}
 
 if ($NoSd21) {
     Write-Step "Skipping the SD2.1 session server (-NoSd21)"
@@ -359,8 +392,13 @@ if (Test-Port -Port $GatewayPort) {
     exit 1
 }
 
+# No --config flag: openclaw rejects it and exits. It reads the config from its
+# own home directory, which is where setup.ps1 writes openclaw.json.
 $gwCmd = "openclaw gateway run"
-if ($Config -and (Test-Path -LiteralPath $Config)) { $gwCmd += " --config `"$Config`"" }
+if ($Config -and (Test-Path -LiteralPath $Config) -and
+    $Config -ne (Join-Path $state.openclawHome "openclaw.json")) {
+    Write-Warn "openclaw has no --config option, so $Config will be ignored. Copy it to $(Join-Path $state.openclawHome 'openclaw.json') to use it."
+}
 
 $gateway = Start-Service-Process -Name "openclaw-gateway" -CommandLine $gwCmd -LogFile $GatewayLog -WorkDir $Workspace
 
@@ -392,7 +430,7 @@ try {
     Get-Content -LiteralPath $GatewayLog -Wait -Encoding UTF8 | ForEach-Object {
         Write-Host "  $_"
         if ($gateway.HasExited) {
-            Write-Warn "Gateway exited (code $($gateway.ExitCode))"
+            Write-Warn "Gateway exited (code $(Get-ExitCode $gateway))"
             break
         }
     }
