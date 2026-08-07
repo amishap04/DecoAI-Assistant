@@ -268,7 +268,7 @@ $EnvLocal    = Join-Path $ScriptDir ".env"
 
 foreach ($p in @($SrcSkills, $SrcSystem, $EnvTemplate)) {
     if (-not (Test-Path -LiteralPath $p)) {
-        Stop-Setup "Required source not found: $p  (run setup.ps1 from inside the to-submit folder)"
+        Stop-Setup "Required source not found: $p  (run setup.ps1 from the repository root, the folder holding Skills\ and System\)"
     }
 }
 
